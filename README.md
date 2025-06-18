@@ -21,3 +21,36 @@
 ## Getting started and documentation
 
 Installation instructions and further documentation of the ROS bridge and additional packages are found [__here__](https://carla.readthedocs.io/projects/ros-bridge/en/latest/).
+
+# 编译
+参考: https://carla.readthedocs.io/projects/ros-bridge/en/latest/ros_installation_ros1/
+# 例子
+
+
+1. 分步骤启动
+
+```
+./CarlaUE4.sh
+
+source devel/setup.bash
+roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
+
+rviz -d src/ros-bridge/carla_ad_demo/config/carla_ad_demo.rviz
+
+source devel/setup.bash
+roslaunch carla_waypoint_publisher carla_waypoint_publisher.launch
+
+source devel/setup.bash
+roslaunch carla_ad_agent carla_ad_agent.launch
+
+source devel/setup.bash
+rostopic pub carla/ego_vehicle/target_speed std_msgs/Float64 5.0
+```
+2. 启动集成好的ad_demo
+```
+./CarlaUE4.sh
+
+source devel/setup.bash
+roslaunch carla_ad_demo carla_ad_demo_with_scenario.launch 
+```
+
