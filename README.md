@@ -19,8 +19,8 @@
 
 Installation instructions and further documentation of the ROS bridge and additional packages are found [__here__](https://carla.readthedocs.io/projects/ros-bridge/en/latest/).
 
-# ROS installation
-一键安装指令, ubuntu20.04 选择ros1 noetic版本
+# Install ROS 
+一键安装指令(ROS Noetic — For Ubuntu 20.04)
 ```
 wget http://fishros.com/install -O fishros && . fishros 
 ```
