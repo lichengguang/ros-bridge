@@ -1,15 +1,12 @@
 # ROS/ROS2 bridge for CARLA simulator
 
-[![Actions Status](https://github.com/carla-simulator/ros-bridge/workflows/CI/badge.svg)](https://github.com/carla-simulator/ros-bridge)
 [![Documentation](https://readthedocs.org/projects/carla/badge/?version=latest)](http://carla.readthedocs.io)
-[![GitHub](https://img.shields.io/github/license/carla-simulator/ros-bridge)](https://github.com/carla-simulator/ros-bridge/blob/master/LICENSE)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/carla-simulator/ros-bridge)](https://github.com/carla-simulator/ros-bridge/releases/latest)
 
  This ROS package is a bridge that enables two-way communication between ROS and CARLA. The information from the CARLA server is translated to ROS topics. In the same way, the messages sent between nodes in ROS get translated to commands to be applied in CARLA.
 
 ![rviz setup](./docs/images/ad_demo.png "AD Demo")
 
-**This version requires CARLA 0.9.13**
+**This version requires CARLA 0.9.15**
 
 ## Features
 
@@ -22,35 +19,90 @@
 
 Installation instructions and further documentation of the ROS bridge and additional packages are found [__here__](https://carla.readthedocs.io/projects/ros-bridge/en/latest/).
 
-# 编译
-参考: https://carla.readthedocs.io/projects/ros-bridge/en/latest/ros_installation_ros1/
-# 例子
-
-
-1. 分步骤启动
-
+# ROS installation
+一键安装指令, ubuntu20.04 选择ros1 noetic版本
 ```
+wget http://fishros.com/install -O fishros && . fishros 
+```
+# ROS bridge installation Using the source repository
+
+1. Create a catkin workspace:
+```
+mkdir -p ~/carla-ros-bridge/catkin_ws/src
+```
+2. Clone the ROS Bridge repository and submodules:
+```
+cd ~/carla-ros-bridge
+git clone --recurse-submodules -b 0.9.15 git@github.com:lichengguang/ros-bridge.git catkin_ws/src/ros-bridge
+```
+3. Set up the ROS environment according to the ROS version you have installed:
+```
+source /opt/ros/noetic/setup.bash
+```
+4. Install the required ros-dependencies:
+```
+sudo apt-get install ros-noetic-derived-object-msgs
+sudo apt-get install ros-noetic-ackermann-msgs
+
+cd catkin_ws
+rosdep update
+rosdep install --from-paths src --ignore-src -r
+```
+
+5. Build the ROS bridge:
+```
+catkin build 
+```
+# Run the ROS bridge
+
+1. Start a CARLA server according to the installation method used to install CARLA:
+```
+# Package version in carla root folder
 ./CarlaUE4.sh
 
-source devel/setup.bash
+# Debian installation in `opt/carla-simulator/`
+./CarlaUE4.sh
+
+# Build from source version in carla root folder
+make launch
+```
+you can use Low quality mode
+```
+./CarlaUE4.sh -quality-level=Low
+```
+2. Add the correct CARLA modules to your Python path:
+```
+export CARLA_ROOT=<path-to-carla>
+export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-<carla_version_and_arch>.egg:$CARLA_ROOT/PythonAPI/carla
+
+```
+for me this is:
+```
+export CARLA_ROOT=/home/lcg/code/carla/Dist/CARLA_Shipping_6d38c9d-dirty/LinuxNoEditor
+export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.8-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla
+```
+you can set it into ~/.bashrc
+```
+sudo vim ~/.bashrc
+# add CARLA_ROOT and PYTHONPATH
+
+export CARLA_ROOT=/home/lcg/code/carla/Dist/CARLA_Shipping_6d38c9d-dirty/LinuxNoEditor
+export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.8-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla
+
+# save and source 
+source ~/.bashrc
+```
+
+3. Add the source path for the ROS bridge workspace according to the installation method of the ROS bridge. This should be done in every terminal each time you want to run the ROS bridge:
+```
+source ~/carla-ros-bridge/catkin_ws/devel/setup.bash
+```
+4. Start the ROS bridge. Use any of the different launch files available to check the installation:
+```
+# Option 1: start the ros bridge
+roslaunch carla_ros_bridge carla_ros_bridge.launch
+
+# Option 2: start the ros bridge together with an example ego vehicle
 roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
-
-rviz -d src/ros-bridge/carla_ad_demo/config/carla_ad_demo.rviz
-
-source devel/setup.bash
-roslaunch carla_waypoint_publisher carla_waypoint_publisher.launch
-
-source devel/setup.bash
-roslaunch carla_ad_agent carla_ad_agent.launch
-
-source devel/setup.bash
-rostopic pub carla/ego_vehicle/target_speed std_msgs/Float64 5.0
 ```
-2. 启动集成好的ad_demo
-```
-./CarlaUE4.sh
-
-source devel/setup.bash
-roslaunch carla_ad_demo carla_ad_demo_with_scenario.launch 
-```
-
+更多示例参考官网文档:https://carla.readthedocs.io/projects/ros-bridge/en/latest/
