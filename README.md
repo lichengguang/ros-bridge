@@ -24,6 +24,9 @@ Installation instructions and further documentation of the ROS bridge and additi
 ```
 wget http://fishros.com/install -O fishros && . fishros 
 ```
+# Install Carla 0.9.15
+参考: https://carla.readthedocs.io/en/0.9.15/
+
 # ROS bridge installation Using the source repository
 
 1. Create a catkin workspace:
