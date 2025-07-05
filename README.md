@@ -98,7 +98,7 @@ source ~/.bashrc
 
 3. Add the source path for the ROS bridge workspace according to the installation method of the ROS bridge. This should be done in every terminal each time you want to run the ROS bridge:
 ```
-source ~/carla-ros-bridge/catkin_ws/devel/setup.bash
+source devel/setup.bash
 ```
 4. Start the ROS bridge. Use any of the different launch files available to check the installation:
 ```
@@ -108,4 +108,5 @@ roslaunch carla_ros_bridge carla_ros_bridge.launch
 # Option 2: start the ros bridge together with an example ego vehicle
 roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
 ```
+
 更多示例参考官网文档:https://carla.readthedocs.io/projects/ros-bridge/en/latest/
