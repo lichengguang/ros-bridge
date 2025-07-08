@@ -81,15 +81,16 @@ export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-<carla_vers
 ```
 for me this is:
 ```
-export CARLA_ROOT=/home/lcg/code/carla/Dist/CARLA_Shipping_6d38c9d-dirty/LinuxNoEditor
+export CARLA_ROOT=/home/lcg/workspace/CARLA_0.9.15
 export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.8-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla
+
 ```
 you can set it into ~/.bashrc
 ```
 sudo vim ~/.bashrc
 # add CARLA_ROOT and PYTHONPATH
 
-export CARLA_ROOT=/home/lcg/code/carla/Dist/CARLA_Shipping_6d38c9d-dirty/LinuxNoEditor
+export CARLA_ROOT=/home/lcg/workspace/CARLA_0.9.15
 export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.8-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla
 
 # save and source 
