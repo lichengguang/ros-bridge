@@ -1,49 +1,73 @@
-# ROS/ROS2 bridge for CARLA simulator
+# CARLA 模拟器 ROS/ROS2 桥接器
 
-[![Documentation](https://readthedocs.org/projects/carla/badge/?version=latest)](http://carla.readthedocs.io)
+[![文档状态](https://readthedocs.org/projects/carla/badge/?version=latest)](http://carla.readthedocs.io)
 
- This ROS package is a bridge that enables two-way communication between ROS and CARLA. The information from the CARLA server is translated to ROS topics. In the same way, the messages sent between nodes in ROS get translated to commands to be applied in CARLA.
+本ROS包是一个桥接器，实现了ROS与CARLA模拟器之间的双向通信。CARLA服务器的信息会被转换为ROS话题，同时ROS节点间的消息也会被转换为CARLA可执行的命令。
 
-![rviz setup](./docs/images/ad_demo.png "AD Demo")
+![rviz演示](./docs/images/ad_demo.png "自动驾驶演示")
 
-**This version requires CARLA 0.9.15**
+**当前版本要求 CARLA 0.9.15**
 
-## Features
+## 主要功能
 
-- Provide Sensor Data (Lidar, Semantic lidar, Cameras (depth, segmentation, rgb, dvs), GNSS, Radar, IMU)
-- Provide Object Data (Transforms (via [tf](http://wiki.ros.org/tf)), Traffic light status, Visualization markers, Collision, Lane invasion)
-- Control AD Agents (Steer/Throttle/Brake)
-- Control CARLA (Play/pause simulation, Set simulation parameters)
+- **传感器数据支持**：
+  - LiDAR
+  - 语义LiDAR
+  - 摄像头（深度、语义分割、RGB、DVS）
+  - GNSS
+  - 雷达
+  - IMU
 
-## Getting started and documentation
+- **对象数据支持**：
+  - 变换（通过[tf](http://wiki.ros.org/tf)）
+  - 交通灯状态
+  - 可视化标记
+  - 碰撞检测
+  - 车道入侵检测
 
-Installation instructions and further documentation of the ROS bridge and additional packages are found [__here__](https://carla.readthedocs.io/projects/ros-bridge/en/latest/).
+- **控制功能**：
+  - 自动驾驶代理控制（转向/油门/刹车）
+  - CARLA仿真控制（暂停/继续仿真，设置仿真参数）
 
-# Install ROS 
-一键安装指令(ROS Noetic — For Ubuntu 20.04)
+## 系统要求
+
+- **操作系统**：Ubuntu 20.04
+- **ROS版本**：Noetic
+- **CARLA版本**：0.9.15
+
+## 安装指南
+
+### 1. 安装ROS Noetic（Ubuntu 20.04）
+
+使用一键安装指令：
+```bash
+wget http://fishros.com/install -O fishros && . fishros
 ```
-wget http://fishros.com/install -O fishros && . fishros 
-```
-# Install Carla 0.9.15
-参考: https://carla.readthedocs.io/en/0.9.15/
 
-# ROS bridge installation Using the source repository
+### 2. 安装CARLA 0.9.15
 
-1. Create a catkin workspace:
-```
+参考官方文档：[CARLA 0.9.15 安装指南](https://carla.readthedocs.io/en/0.9.15/)
+
+### 3. 安装ROS桥接器（源码方式）
+
+1. 创建工作空间：
+```bash
 mkdir -p ~/carla-ros-bridge/catkin_ws/src
 ```
-2. Clone the ROS Bridge repository and submodules:
-```
+
+2. 克隆ROS桥接器仓库及子模块：
+```bash
 cd ~/carla-ros-bridge
 git clone --recurse-submodules -b 0.9.15 git@github.com:lichengguang/ros-bridge.git catkin_ws/src/ros-bridge
 ```
-3. Set up the ROS environment according to the ROS version you have installed:
-```
+
+3. 设置ROS环境：
+```bash
 source /opt/ros/noetic/setup.bash
 ```
-4. Install the required ros-dependencies:
-```
+
+4. 安装ROS依赖：
+```bash
 sudo apt-get install ros-noetic-derived-object-msgs
 sudo apt-get install ros-noetic-ackermann-msgs
 
@@ -52,62 +76,92 @@ rosdep update
 rosdep install --from-paths src --ignore-src -r
 ```
 
-5. Build the ROS bridge:
+5. 构建ROS桥接器：
+```bash
+catkin build
 ```
-catkin build 
-```
-# Run the ROS bridge
 
-1. Start a CARLA server according to the installation method used to install CARLA:
-```
-# Package version in carla root folder
+## 使用说明
+
+### 1. 启动CARLA服务器
+
+根据您的安装方式选择相应命令：
+```bash
+# 源码包版本或Debian安装版本（在carla根目录）
 ./CarlaUE4.sh
 
-# Debian installation in `opt/carla-simulator/`
-./CarlaUE4.sh
-
-# Build from source version in carla root folder
+# 源码编译版本（在carla根目录）
 make launch
 ```
-you can use Low quality mode
-```
+
+可以使用低质量模式节省资源：
+```bash
 ./CarlaUE4.sh -quality-level=Low
 ```
-2. Add the correct CARLA modules to your Python path:
-```
+
+### 2. 设置Python路径
+
+```bash
 export CARLA_ROOT=<path-to-carla>
 export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-<carla_version_and_arch>.egg:$CARLA_ROOT/PythonAPI/carla
+```
 
-```
-for me this is:
-```
+示例（根据您的实际路径调整）：
+```bash
 export CARLA_ROOT=/home/lcg/workspace/CARLA_0.9.15
 export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.8-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla
-
 ```
-you can set it into ~/.bashrc
-```
-sudo vim ~/.bashrc
-# add CARLA_ROOT and PYTHONPATH
 
-export CARLA_ROOT=/home/lcg/workspace/CARLA_0.9.15
-export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.8-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla
-
-# save and source 
+可以将这些设置添加到`~/.bashrc`文件中永久生效：
+```bash
+echo 'export CARLA_ROOT=/home/lcg/workspace/CARLA_0.9.15' >> ~/.bashrc
+echo 'export PYTHONPATH=$PYTHONPATH:$CARLA_ROOT/PythonAPI/carla/dist/carla-0.9.15-py3.8-linux-x86_64.egg:$CARLA_ROOT/PythonAPI/carla' >> ~/.bashrc
 source ~/.bashrc
 ```
 
-3. Add the source path for the ROS bridge workspace according to the installation method of the ROS bridge. This should be done in every terminal each time you want to run the ROS bridge:
+### 3. 启动ROS桥接器
+
+首先设置工作空间环境：
+```bash
+source ~/carla-ros-bridge/catkin_ws/devel/setup.bash
 ```
-source devel/setup.bash
-```
-4. Start the ROS bridge. Use any of the different launch files available to check the installation:
-```
-# Option 1: start the ros bridge
+
+启动选项：
+```bash
+# 选项1：仅启动ROS桥接器
 roslaunch carla_ros_bridge carla_ros_bridge.launch
 
-# Option 2: start the ros bridge together with an example ego vehicle
+# 选项2：启动ROS桥接器并附带示例车辆
 roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
 ```
 
-更多示例参考官网文档:https://carla.readthedocs.io/projects/ros-bridge/en/latest/
+## 示例与演示
+
+更多示例和详细用法请参考官方文档：
+[ROS桥接器官方文档](https://carla.readthedocs.io/projects/ros-bridge/en/latest/)
+
+
+## 功能包介绍
+
+本项目包含以下主要功能包：
+
+- **[carla_ros_bridge](./docs/carla_ros_bridge_cn.md)**: 核心桥接功能，实现ROS与CARLA的基础通信
+- **[carla_ackermann_control](./docs/carla_ackermann_control_cn.md)**: Ackermann车辆控制接口
+- **[carla_ad_agent](./docs/carla_ad_agent_cn.md)**: 自动驾驶代理实现
+- **[carla_manual_control](./docs/carla_manual_control_cn.md)**: 手动控制接口
+- **[carla_ros_scenario_runner](./docs/carla_ros_scenario_runner_cn.md)**: 场景运行器集成
+- **[carla_spawn_objects](./docs/carla_spawn_objects_cn.md)**: 对象生成工具
+- **[carla_twist_to_control](./docs/carla_twist_to_control_cn.md)**: Twist消息转换控制
+- **[carla_waypoint_publisher](./docs/carla_waypoint_cn.md)**: 路径点发布工具
+- **[rqt_carla_control](./docs/rqt_plugin_cn.md)**: RQT插件控制界面
+- **[rviz_carla_plugin](./docs/rviz_plugin_cn.md)**: RVIZ可视化插件
+
+各功能包详细文档可在`docs`目录下查看：
+
+- 中文文档：`docs/*_cn.md`
+- 英文文档：`docs/*.md` (无_cn后缀)
+
+## 文档链接
+
+- [CARLA官方文档](https://carla.readthedocs.io)
+- [ROS桥接器文档](https://carla.readthedocs.io/projects/ros-bridge/en/latest/)
