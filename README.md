@@ -145,7 +145,7 @@ roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
 
 本项目包含以下主要功能包：
 
-- **[carla_ros_bridge](./docs/carla_ros_bridge_cn.md)**: 核心桥接功能，实现ROS与CARLA的基础通信
+- **carla_ros_bridge**: 核心桥接功能，实现ROS与CARLA的基础通信
 - **[carla_ackermann_control](./docs/carla_ackermann_control_cn.md)**: Ackermann车辆控制接口
 - **[carla_ad_agent](./docs/carla_ad_agent_cn.md)**: 自动驾驶代理实现
 - **[carla_manual_control](./docs/carla_manual_control_cn.md)**: 手动控制接口
@@ -153,7 +153,7 @@ roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
 - **[carla_spawn_objects](./docs/carla_spawn_objects_cn.md)**: 对象生成工具
 - **[carla_twist_to_control](./docs/carla_twist_to_control_cn.md)**: Twist消息转换控制
 - **[carla_waypoint_publisher](./docs/carla_waypoint_cn.md)**: 路径点发布工具
-- **[rqt_carla_control](./docs/rqt_plugin_cn.md)**: RQT插件控制界面
+- **rqt_carla_control**: RQT插件控制界面
 - **[rviz_carla_plugin](./docs/rviz_plugin_cn.md)**: RVIZ可视化插件
 
 各功能包详细文档可在`docs`目录下查看：
